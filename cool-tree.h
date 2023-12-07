@@ -1,17 +1,16 @@
 #ifndef COOL_TREE_H
 #define COOL_TREE_H
-//////////////////////////////////////////////////////////
+
 //
 // file: cool-tree.h
 //
 // This file defines classes for each phylum and constructor
 //
-//////////////////////////////////////////////////////////
-
 
 #include "tree.h"
 #include "cool-tree.handcode.h"
 
+class CgenNode;
 
 // define the class for phylum
 // define simple phylum - Program
@@ -49,6 +48,11 @@ class Feature_class : public tree_node {
 public:
    tree_node *copy()		 { return copy_Feature(); }
    virtual Feature copy_Feature() = 0;
+   virtual void set_node_info(CgenNode*) = 0;
+   virtual Symbol get_type() = 0;
+   virtual void code(CgenNode*, std::ostream&) = 0;
+   virtual Symbol get_name() = 0;
+   virtual Formals get_formals() = 0;
 
 #ifdef Feature_EXTRAS
    Feature_EXTRAS
@@ -63,6 +67,7 @@ class Formal_class : public tree_node {
 public:
    tree_node *copy()		 { return copy_Formal(); }
    virtual Formal copy_Formal() = 0;
+   virtual Symbol get_name() = 0;
 
 #ifdef Formal_EXTRAS
    Formal_EXTRAS
@@ -91,6 +96,9 @@ class Case_class : public tree_node {
 public:
    tree_node *copy()		 { return copy_Case(); }
    virtual Case copy_Case() = 0;
+   virtual Symbol get_type() = 0;
+   virtual void code(ostream& s) = 0;
+   virtual Symbol get_name() = 0;
 
 #ifdef Case_EXTRAS
    Case_EXTRAS
@@ -187,6 +195,11 @@ public:
    }
    Feature copy_Feature();
    void dump(ostream& stream, int n);
+   void set_node_info(CgenNode*);
+   Symbol get_type() {return return_type;}
+   void code(CgenNode*, std::ostream&);
+   Symbol get_name() {return name;}
+   Formals get_formals() {return formals;}
 
 #ifdef Feature_SHARED_EXTRAS
    Feature_SHARED_EXTRAS
@@ -211,6 +224,11 @@ public:
    }
    Feature copy_Feature();
    void dump(ostream& stream, int n);
+   void set_node_info(CgenNode*);
+   Symbol get_type() {return type_decl;}
+   void code(CgenNode*, std::ostream&);
+   Symbol get_name() {return name;}
+   Formals get_formals() {return NULL;}
 
 #ifdef Feature_SHARED_EXTRAS
    Feature_SHARED_EXTRAS
@@ -233,6 +251,7 @@ public:
    }
    Formal copy_Formal();
    void dump(ostream& stream, int n);
+   Symbol get_name() {return name;}
 
 #ifdef Formal_SHARED_EXTRAS
    Formal_SHARED_EXTRAS
@@ -257,6 +276,9 @@ public:
    }
    Case copy_Case();
    void dump(ostream& stream, int n);
+   Symbol get_type() {return type_decl;}
+   void code(ostream& s);
+   Symbol get_name() {return name;}
 
 #ifdef Case_SHARED_EXTRAS
    Case_SHARED_EXTRAS
